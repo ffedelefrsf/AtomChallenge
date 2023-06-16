@@ -3,6 +3,7 @@ import { DocumentData } from 'firebase-admin/firestore';
 
 import { CommonResponseObject, SupportedHttpStatusses } from '../utils/types';
 import { CommonService } from '../service/common.service';
+import { CustomError } from '../utils/custom-error';
 
 export class CommonController<
   T extends DocumentData,
@@ -15,8 +16,7 @@ export class CommonController<
 
   static defaultErrorResponse: CommonResponseObject = {
     success: false,
-    message: 'An error occurred.',
-    data: undefined
+    message: 'An error occurred.'
   };
 
   constructor(commonService: TService, path: string) {
@@ -40,29 +40,29 @@ export class CommonController<
   private readonly responseMapper: {
     [key: string]: (extraMessage?: string) => CommonResponseObject;
   } = {
-    [SupportedHttpStatusses.BAD_REQUEST]: (extraMessage) => ({
+    [SupportedHttpStatusses.BAD_REQUEST]: (extraMessage = '') => ({
       ...CommonController.defaultErrorResponse,
       message: 'Bad Request.',
       extraMessage
     }),
-    [SupportedHttpStatusses.UNAUTHORIZED]: (extraMessage) => ({
+    [SupportedHttpStatusses.UNAUTHORIZED]: (extraMessage = '') => ({
       ...CommonController.defaultErrorResponse,
       message: 'Unauthorized.',
       extraMessage
     }),
-    [SupportedHttpStatusses.FORBIDDEN_RESOURCE]: (extraMessage) => ({
+    [SupportedHttpStatusses.FORBIDDEN_RESOURCE]: (extraMessage = '') => ({
       ...CommonController.defaultErrorResponse,
       message: "You don't have permissions to acces this resource.",
       extraMessage
     }),
-    [SupportedHttpStatusses.NOT_FOUND]: (extraMessage) => ({
+    [SupportedHttpStatusses.NOT_FOUND]: (extraMessage = '') => ({
       ...CommonController.defaultErrorResponse,
       message: 'Not Found.',
       extraMessage: extraMessage ?? 'Resource not found.'
     }),
-    [SupportedHttpStatusses.INTERNAL_SERVER_ERROR]: (extraMessage) => ({
+    [SupportedHttpStatusses.INTERNAL_SERVER_ERROR]: (extraMessage = '') => ({
       ...CommonController.defaultErrorResponse,
-      extraMessage
+      extraMessage: extraMessage
     })
   };
 
@@ -81,7 +81,7 @@ export class CommonController<
     };
   }
 
-  sendErrorResponse(res: Response, error: any): void {
+  sendErrorResponse(res: Response, error: CustomError): void {
     const status = error.code ?? SupportedHttpStatusses.INTERNAL_SERVER_ERROR;
     res.status(status).send(this.getErrorResponseBody(status, error.message));
   }

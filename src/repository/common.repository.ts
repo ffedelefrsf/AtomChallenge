@@ -1,4 +1,5 @@
 import { firestoreInstance } from '../config/firebase';
+import { CommonErrorMessages } from '../utils/common-error-messages';
 import { CustomError } from '../utils/custom-error';
 import { SupportedHttpStatusses } from '../utils/types';
 
@@ -29,8 +30,10 @@ export class CommonRepository<T extends FirebaseFirestore.DocumentData> {
 
   async updateById(id: string, newEntity: T): Promise<T> {
     await this.checkExistance(id);
+    const enteredEntity = { ...newEntity };
+    delete newEntity.id;
     await this.collectionRef.doc(id).update(newEntity);
-    return newEntity;
+    return enteredEntity;
   }
 
   async create(newEntity: T): Promise<T> {
@@ -40,7 +43,7 @@ export class CommonRepository<T extends FirebaseFirestore.DocumentData> {
       if (existingElement) {
         throw new CustomError(
           SupportedHttpStatusses.BAD_REQUEST,
-          'ALREADY_EXISTS'
+          CommonErrorMessages.ALREADY_EXISTS
         );
       }
     }
@@ -58,7 +61,10 @@ export class CommonRepository<T extends FirebaseFirestore.DocumentData> {
   private checkExistance(id: string) {
     return this.findById(id).then((result) => {
       if (!result) {
-        throw new CustomError(SupportedHttpStatusses.NOT_FOUND, 'NOT_FOUND');
+        throw new CustomError(
+          SupportedHttpStatusses.NOT_FOUND,
+          CommonErrorMessages.NOT_FOUND
+        );
       } else {
         return result;
       }

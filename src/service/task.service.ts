@@ -3,8 +3,10 @@ import { TaskEntity } from '../model/task/task.entity';
 import { CommonService } from './common.service';
 
 export class TaskService extends CommonService<TaskEntity> {
+  static collectionName = 'tasks';
+
   constructor() {
-    super('tasks');
+    super(TaskService.collectionName);
   }
 
   create(entity: TaskEntity) {

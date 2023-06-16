@@ -1,6 +1,6 @@
 export interface CommonResponseObject {
   success: boolean;
-  data: any;
+  data?: any;
   message?: string;
   extraMessage?: string;
 }

@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "NODE_ENV=development nodemon src/index.ts",
-    "test": "NODE_ENV=testing mocha -r ts-node/register 'tests/**/*.ts'"
+    "test": "NODE_ENV=testing mocha -r ts-node/register 'tests/**/*.ts' --watch"
   },
   "repository": {
     "type": "git",
@@ -38,6 +38,7 @@
     "eslint-plugin-promise": "6.1.1",
     "mocha": "10.2.0",
     "nodemon": "2.0.22",
+    "sinon": "15.1.2",
     "ts-node": "10.9.1",
     "typescript": "5.1.3"
   },
