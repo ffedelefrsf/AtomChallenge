@@ -6,8 +6,10 @@ import { SupportedHttpStatusses } from '../utils/types';
 export class CommonRepository<T extends FirebaseFirestore.DocumentData> {
   private readonly collectionRef: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
 
-  constructor(collectionName: string) {
-    this.collectionRef = firestoreInstance.collection(collectionName);
+  constructor(userId: string, collectionName: string) {
+    this.collectionRef = firestoreInstance.collection(
+      `users/${userId}/${collectionName}`
+    );
   }
 
   findAll(): Promise<T[]> {

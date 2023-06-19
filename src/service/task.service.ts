@@ -5,8 +5,8 @@ import { CommonService } from './common.service';
 export class TaskService extends CommonService<TaskEntity> {
   static collectionName = 'tasks';
 
-  constructor() {
-    super(TaskService.collectionName);
+  constructor(userId: string) {
+    super(userId, TaskService.collectionName);
   }
 
   create(entity: TaskEntity) {

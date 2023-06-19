@@ -1,8 +1,22 @@
+import { Request } from 'express';
+import { DecodedIdToken } from 'firebase-admin/auth';
+import { DocumentData } from 'firebase-admin/firestore';
+
+import { CommonService } from '../service/common.service';
+
 export interface CommonResponseObject {
   success: boolean;
   data?: any;
   message?: string;
   extraMessage?: string;
+}
+
+export interface CommonRequest<
+  T extends DocumentData,
+  TService extends CommonService<T>
+> extends Request {
+  user: DecodedIdToken;
+  service: TService;
 }
 
 export enum SupportedHttpStatusses {

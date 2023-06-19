@@ -2,13 +2,17 @@ import { NextFunction, Request, Response } from 'express';
 
 import { TaskService } from '../service/task.service';
 import { CommonController } from './common.controller';
-import { CommonResponseObject, SupportedHttpStatusses } from '../utils/types';
+import {
+  CommonRequest,
+  CommonResponseObject,
+  SupportedHttpStatusses
+} from '../utils/types';
 import { TaskEntity } from '../model/task/task.entity';
 import { TaskStatus } from '../model/task/task-status.enum';
 import { ErrorMessages } from '../model/task/error-messages.enum';
 import { CustomError } from '../utils/custom-error';
 
-export class TaskController extends CommonController<TaskEntity, TaskService> {
+export class TaskController extends CommonController<TaskEntity> {
   private static instance: TaskController;
 
   private sampleInputType: Omit<TaskEntity, 'status'> & { status: string } = {
@@ -27,7 +31,7 @@ export class TaskController extends CommonController<TaskEntity, TaskService> {
   };
 
   private constructor() {
-    super(new TaskService(), 'tasks');
+    super('tasks');
     this.initializeRouter();
   }
 
@@ -43,22 +47,26 @@ export class TaskController extends CommonController<TaskEntity, TaskService> {
   }
 
   initializeRouter() {
+    // CREATE SERVICE INSTANCE
+    this.router.use((req: Request, _res, next: NextFunction) => {
+      const commonRequest = req as CommonRequest<TaskEntity, TaskService>;
+      commonRequest.service = new TaskService(commonRequest.user.uid);
+      next();
+    });
     // GET ALL
-    this.router.get(
-      '',
-      (_req: Request, res: Response<CommonResponseObject>) => {
-        this.service
-          .getAll()
-          .then((result) => {
-            const status =
-              result.length > 0
-                ? SupportedHttpStatusses.OK
-                : SupportedHttpStatusses.NO_CONTENT;
-            res.status(status).send(this.wrapResult(result));
-          })
-          .catch((error: CustomError) => this.sendErrorResponse(res, error));
-      }
-    );
+    this.router.get('', (req: Request, res: Response<CommonResponseObject>) => {
+      const commonRequest = req as CommonRequest<TaskEntity, TaskService>;
+      commonRequest.service
+        .getAll()
+        .then((result) => {
+          const status =
+            result.length > 0
+              ? SupportedHttpStatusses.OK
+              : SupportedHttpStatusses.NO_CONTENT;
+          res.status(status).send(this.wrapResult(result));
+        })
+        .catch((error: CustomError) => this.sendErrorResponse(res, error));
+    });
 
     // CREATE NEW ONE
     this.router.post(
@@ -70,7 +78,8 @@ export class TaskController extends CommonController<TaskEntity, TaskService> {
           ...this.newEntityInitialValues,
           ...body
         };
-        this.service
+        const commonRequest = req as CommonRequest<TaskEntity, TaskService>;
+        commonRequest.service
           .create(entityToCreate)
           .then((result) => {
             res
@@ -91,7 +100,8 @@ export class TaskController extends CommonController<TaskEntity, TaskService> {
           body,
           params: { id }
         } = req;
-        this.service
+        const commonRequest = req as CommonRequest<TaskEntity, TaskService>;
+        commonRequest.service
           .update({ id, ...body })
           .then((result) => {
             res.status(SupportedHttpStatusses.OK).send(this.wrapResult(result));
@@ -108,7 +118,8 @@ export class TaskController extends CommonController<TaskEntity, TaskService> {
         const {
           params: { id }
         } = req;
-        this.service
+        const commonRequest = req as CommonRequest<TaskEntity, TaskService>;
+        commonRequest.service
           .delete(id)
           .then((result) => {
             res.status(SupportedHttpStatusses.OK).send(this.wrapResult(result));

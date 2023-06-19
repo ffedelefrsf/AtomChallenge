@@ -2,35 +2,26 @@ import { Response, Router } from 'express';
 import { DocumentData } from 'firebase-admin/firestore';
 
 import { CommonResponseObject, SupportedHttpStatusses } from '../utils/types';
-import { CommonService } from '../service/common.service';
 import { CustomError } from '../utils/custom-error';
 
-export class CommonController<
-  T extends DocumentData,
-  TService extends CommonService<T>
-> {
+export class CommonController<T extends DocumentData> {
   private readonly routerAPI: Router;
-  private readonly commonService: TService;
 
   private readonly path: string;
 
   static defaultErrorResponse: CommonResponseObject = {
     success: false,
-    message: 'An error occurred.'
+    message: 'An error occurred.',
+    extraMessage: ''
   };
 
-  constructor(commonService: TService, path: string) {
+  constructor(path: string) {
     this.routerAPI = Router();
-    this.commonService = commonService;
     this.path = path;
   }
 
   get router() {
     return this.routerAPI;
-  }
-
-  get service() {
-    return this.commonService;
   }
 
   get prefix() {
