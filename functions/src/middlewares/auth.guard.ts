@@ -1,13 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { DecodedIdToken } from 'firebase-admin/auth';
 
-import {
-  CommonRequest,
-  CommonResponseObject,
-  SupportedHttpStatusses
-} from '../utils/types';
+import { CommonResponseObject, SupportedHttpStatusses } from '../utils/types';
 import { CommonController } from '../controller/common.controller';
 import { firebaseAuth } from '../config/firebase';
+import { CommonRequest } from '../controller/task.controller';
 
 export class AuthGuard {
   private static instance: AuthGuard;

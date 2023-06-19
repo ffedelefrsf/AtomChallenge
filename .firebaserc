@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "atom-challenge-f2f3d"
+  },
+  "targets": {
+    "atom-challenge-f2f3d": {
+      "hosting": {
+        "backend": [
+          "atomchallenge-backend"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

@@ -1,16 +1,23 @@
 import { NextFunction, Request, Response } from 'express';
+import { DocumentData } from 'firebase-admin/firestore';
+import { DecodedIdToken } from 'firebase-admin/auth';
 
 import { TaskService } from '../service/task.service';
 import { CommonController } from './common.controller';
-import {
-  CommonRequest,
-  CommonResponseObject,
-  SupportedHttpStatusses
-} from '../utils/types';
+import { CommonResponseObject, SupportedHttpStatusses } from '../utils/types';
 import { TaskEntity } from '../model/task/task.entity';
 import { TaskStatus } from '../model/task/task-status.enum';
 import { ErrorMessages } from '../model/task/error-messages.enum';
 import { CustomError } from '../utils/custom-error';
+import { CommonService } from '../service/common.service';
+
+export interface CommonRequest<
+  T extends DocumentData,
+  TService extends CommonService<T>
+> extends Request {
+  user: DecodedIdToken;
+  service: TService;
+}
 
 export class TaskController extends CommonController<TaskEntity> {
   private static instance: TaskController;

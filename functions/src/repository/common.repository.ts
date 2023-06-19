@@ -26,6 +26,8 @@ export class CommonRepository<T extends FirebaseFirestore.DocumentData> {
         const documentData = documentSnapshot.data() as T | undefined;
         if (documentData) {
           return this.fromDocumentToEntity(documentSnapshot);
+        } else {
+          return undefined;
         }
       });
   }

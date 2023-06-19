@@ -1,0 +1,14 @@
+node_modules
+.vscode
+build
+profilePictures
+
+.development.env
+/google-credentials
+
+# Compiled JavaScript files
+lib/**/*.js
+lib/**/*.js.map
+
+# TypeScript v1 declaration files
+typings/
