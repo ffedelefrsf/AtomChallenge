@@ -6,7 +6,7 @@ import TaskController from './controller/task.controller';
 import { AuthGuard } from './middlewares/auth.guard';
 import { SupportedHttpStatusses } from './utils/types';
 import { CommonController } from './controller/common.controller';
-import { getEnvironmentVariable } from './config';
+// import { getEnvironmentVariable } from './config';
 
 export const prefix = '/api';
 
