@@ -1,6 +1,7 @@
 # Atom Challenge
 
-Hi, folks!
+Hi, folks! ♡
+
 In this opportunity, I was asked to solve a full stack challenge from [Atom](https://atomchat.io/) company. So, below I'll describe my approach and solutions.
 
 ## Description
