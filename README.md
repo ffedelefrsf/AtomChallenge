@@ -105,8 +105,12 @@ Task : -TaskStatusEnum status
 ### Data model
 
 When it comes to store the tasks data, I decided to simply create an entity, I mean a collection 'tasks' in Firestore with a bunch of documents related to every single task that is created in the app.
+
 But, later it became a little bit more interesting when I added the authentication because I needed to link tasks with their own tasks, this could be solved with two approachs, in regular relational DBMS it's a many to one relation, which would involve an attribute as a foreign key in Task entity indicating its corresponding user.
-But with this Non-Relational DBMS I found out an easier solution, Firebase admits the cycle Collection -> Document -> Collection -> Document and so on. So, I only needed to change the collection ref adding one collection and document before the previous path. And just that small change did the trick, I ended up having a collection for Users with a bunch of documents which are Users IDs from Firebase Auth, and underneath each user, the collection with tasks we had at first.
+
+On the other hand, with this Non-Relational DBMS I found out an easier solution, Firebase admits the cycle Collection -> Document -> Collection -> Document and so on. So, I only needed to change the collection ref adding one collection and document before the previous path. And just that small change did the trick, I ended up having a collection for Users with a bunch of documents which are Users IDs from Firebase Auth, and underneath each user, the collection with tasks I had at first. 
+
+One thing that's important here is the fact that in order to achieve this approach, I first had to shrink both services and repositories scope because the Firestore collection reference now depends on the user who changes on each request.
 Here an ERD (notice the app support n user_ids and n tasks. I used only two to summarize):
 ```mermaid
 erDiagram
@@ -122,4 +126,4 @@ erDiagram
 
 ## Distribution
 
-To distribute the app I've used Firebase Hosting, since the challenge asked for a Firebase related app, I decided to go ahead and distribute both [Frontend](https://atom-challenge-f2f3d.web.app/) ([repo](https://github.com/ffedelefrsf/AtomChallenge-Frontend)) and [Backend](https://atomchallenge-backend.web.app/api/) (this) within the created app in Firebase.
+To distribute the app I've used Firebase Hosting, since the challenge asked for a Firebase related app, I decided to go ahead and distribute both [Frontend](https://atom-challenge-f2f3d.web.app/) ([repo](https://github.com/ffedelefrsf/AtomChallenge-Frontend)) and [Backend](https://atomchallenge-backend.web.app/api/) ([this](https://github.com/ffedelefrsf/AtomChallenge#atom-challenge)) within the created app in Firebase.
